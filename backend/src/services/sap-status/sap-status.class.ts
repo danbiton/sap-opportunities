@@ -19,8 +19,8 @@ export class SapStatusService {
     try {
        const results = await axios.get(`${baseUrl}/${statusUrl}`, 
         { auth: {
-          username: process.env.USER || '',
-          password: process.env.PASSWORD_SAP || ''
+          username: process.env.SAP_USER || '',
+          password: process.env.SAP_PASSWORD  || ''
         }}
        )
        console.log("res:", results.data.value)

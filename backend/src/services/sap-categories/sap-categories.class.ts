@@ -17,8 +17,8 @@ export class SapCategoriesService{
     try{
       const results = await axios.get(`${baseUrl}/${categoriesUrl}`, 
         { auth: {
-          username: process.env.USER || '',
-          password: process.env.PASSWORD_SAP || ''
+          username: process.env.SAP_USER || '',
+          password: process.env.SAP_PASSWORD  || ''
         }}
       )
       console.log(results.data)

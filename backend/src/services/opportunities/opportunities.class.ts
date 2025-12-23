@@ -38,8 +38,8 @@ export class OpportunitiesService {
         `${baseUrl}/${opportunityUrl}`,
         {
           auth: {
-            username: process.env.USER || '',
-            password: process.env.PASSWORD_SAP || ''
+            username: process.env.SAP_USER || '',
+            password: process.env.SAP_PASSWORD || ''
           }
         }
       );
@@ -82,8 +82,8 @@ export class OpportunitiesService {
           },
           {
             auth: {
-              username: process.env.USER || '',
-              password: process.env.PASSWORD_SAP || ''
+              username: process.env.SAP_USER || '',
+              password: process.env.SAP_PASSWORD || ''
             }
           }
         );

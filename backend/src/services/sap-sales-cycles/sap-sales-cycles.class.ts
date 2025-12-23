@@ -23,8 +23,8 @@ export class SapSalesCyclesService {
       const results = await axios.get(`${baseUerl}/${salesCycle}`,
         {
           auth: {
-            username: process.env.USER || '',
-            password: process.env.PASSWORD_SAP || ''
+            username: process.env.SAP_USER || '',
+            password: process.env.SAP_PASSWORD || ''
           }
         }
       )
