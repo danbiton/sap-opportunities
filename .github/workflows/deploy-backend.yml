@@ -41,15 +41,21 @@ jobs:
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-backend:latest
       
       # שלב 6: עדכן את ה-Container App ב-Azure
+
+      - name: Set ACR credentials
+        run: |
+          az containerapp registry set \
+            --name sap-opportunities-backend \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --server ${{ secrets.ACR_NAME }}.azurecr.io \
+            --username ${{ secrets.ACR_NAME }} \
+            --password ${{ secrets.ACR_PASSWORD }}
       - name: Deploy to Azure Container Apps
         run: |
           az containerapp update \
             --name sap-opportunities-backend \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-backend:latest \
-            --registry-server ${{ secrets.ACR_NAME }}.azurecr.io \
-            --registry-username ${{ secrets.ACR_NAME }} \
-            --registry-password ${{ secrets.ACR_PASSWORD }} \
             --set-env-vars \
               BASE_URL_SAP='${{ secrets.BASE_URL_SAP }}' \
               URL_ACCOUNT='${{ secrets.URL_ACCOUNT }}' \
