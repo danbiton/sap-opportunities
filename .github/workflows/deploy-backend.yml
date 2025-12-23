@@ -47,6 +47,7 @@ jobs:
             --name sap-opportunities-backend \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-backend:latest \
+            --registry-server ${{ secrets.ACR_NAME }}.azurecr.io \
             --set-env-vars \
               BASE_URL_SAP='${{ secrets.BASE_URL_SAP }}' \
               URL_ACCOUNT='${{ secrets.URL_ACCOUNT }}' \
