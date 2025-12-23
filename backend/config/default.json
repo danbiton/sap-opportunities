@@ -3,6 +3,7 @@
   "port": 3030,
   "public": "./public/",
   "origins": [
+    "https://sap-opportunities-frontend.agreeablehill-829b87a4.westeurope.azurecontainerapps.io",
     "http://localhost:3030"
   ],
   "paginate": {

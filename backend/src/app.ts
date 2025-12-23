@@ -16,7 +16,17 @@ const app: Application = koa(feathers())
 app.configure(configuration(configurationValidator))
 
 // Set up Koa middleware
-app.use(cors())
+app.use(cors({
+  origin: (ctx) => {
+    const allowedOrigins = app.get('origins') || ['*']
+    const origin = ctx.request.headers.origin
+    if (allowedOrigins.includes('*') || (origin && allowedOrigins.includes(origin))) {
+      return origin || allowedOrigins[0]
+    }
+    return allowedOrigins[0]
+  },
+  credentials: true
+}))
 app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
