@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const port = process.env.PORT ? parseInt(process.env.PORT) : app.get('port')
+const port = process.env.PORT || app.get('port') || 8080
 const host = app.get('host')
 
 process.on('unhandledRejection', reason => logger.error('Unhandled Rejection %O', reason))
