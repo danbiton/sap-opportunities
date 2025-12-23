@@ -1,0 +1,55 @@
+
+
+name: Deploy Frontend to Azure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+        - 'frontend/**'
+        - '.github/workflows/deploy-frontend.yml'
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. הורד את הקוד מגיטהאב
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # 2. התחבר ל-Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      # 3. התחבר ל-Azure Container Registry
+      - name: Login to ACR
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
+      
+      # 4. בנה Docker image
+      - name: Build Docker image
+        run: |
+         docker build \
+           --build-arg VITE_API_URL=${{ secrets.BACKEND_URL }} \
+           -t ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-frontend:latest \
+           ./frontend   
+
+   
+      
+      # 5. דחוף את התמונה ל-ACR
+      - name: Push to ACR
+        run: |
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-frontend:latest
+      
+      # 6. Deploy ל-Azure Container Apps
+      - name: Deploy to Azure Container Apps
+        run: |
+          az containerapp update \
+            --name sap-opportunities-frontend \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --image ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-frontend:latest

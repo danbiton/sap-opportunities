@@ -1,0 +1,10 @@
+node_modules
+lib
+
+.git
+*.log
+.vscode
+.idea
+coverage
+.nyc_output
+.env 

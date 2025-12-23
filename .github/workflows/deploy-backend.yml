@@ -1,0 +1,59 @@
+name: Deploy Backend to Azure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # שלב 1: הורד את הקוד
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # שלב 2: התחבר ל-Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+    
+      - name: Login to ACR
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
+      
+      # שלב 4: בנה את תמונת הDocker
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-backend:latest \
+            ./backend
+      
+      # שלב 5: דחוף את התמונה ל-ACR
+      - name: Push to ACR
+        run: |
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-backend:latest
+      
+      # שלב 6: עדכן את ה-Container App ב-Azure
+      - name: Deploy to Azure Container Apps
+        run: |
+          az containerapp update \
+            --name sap-opportunities-backend \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --image ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-backend:latest \
+            --set-env-vars \
+              BASE_URL_SAP='${{ secrets.BASE_URL_SAP }}' \
+              URL_ACCOUNT='${{ secrets.URL_ACCOUNT }}' \
+              URL_SALES_CYCLES='${{ secrets.URL_SALES_CYCLES }}' \
+              URL_STATUS='${{ secrets.URL_STATUS }}' \
+              URL_CATEGORIES='${{ secrets.URL_CATEGORIES }}' \
+              URL_OPPORTUNITY='${{ secrets.URL_OPPORTUNITY }}' \
+              SAP_USER='${{ secrets.SAP_USER }}' \
+              SAP_PASSWORD='${{ secrets.SAP_PASSWORD }}' \
+              PORT=8080
