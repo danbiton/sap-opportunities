@@ -222,13 +222,21 @@ function OpportunityCreation() {
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
+
                                     <th className="px-6 py-4 text-left">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedAccounts.length === accounts.length && accounts.length > 0}
-                                            onChange={handleSelectAll}
-                                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                                        />
+
+                                        <div className="flex items-center gap-2 mr-3">
+                                             <span className="text-sm font-medium text-gray-900">
+                                                All
+                                            </span>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedAccounts.length === accounts.length && accounts.length > 0}
+                                                onChange={handleSelectAll}
+                                                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                            />
+                                           
+                                        </div>
                                     </th>
                                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
                                         Client Code

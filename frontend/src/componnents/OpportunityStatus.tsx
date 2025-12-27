@@ -2,17 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 
-interface StatusProps{
+interface StatusProps {
     value: string,
     onChange: (value: string) => void
 }
 
-export default function OpportunityStatus({value, onChange}: StatusProps) {
+export default function OpportunityStatus({ value, onChange }: StatusProps) {
     const [status, setStatus] = useState<any[]>([]);
-    // const [selectedStatus, setSelectedStatus] = useState('')
 
     const baseUrl = import.meta.env.VITE_API_URL
-    console.log("baseUrl:", baseUrl)
+
 
     const fetchStatus = async () => {
         try {
@@ -31,18 +30,30 @@ export default function OpportunityStatus({value, onChange}: StatusProps) {
         fetchStatus()
 
     }, [])
+    
 
-    const statusOptions = [{ value: '', label: 'Select Status' }, ...status.map((stat) =>
-    ({
-        value: stat.code,
-        label: stat.description
-    }))]
+
+    const statusOptions = Array.from(
+        new Map(
+            status
+                .filter(s => s.isActive)
+                .map(stat => [
+                    stat.description,
+                    {
+                        value: stat.code,
+                        label: stat.description
+                    }
+                ])
+        ).values()
+    );
+    const statusOpen = statusOptions.find(s => s.label.toLowerCase() === 'open')
+    const defaultValue = value ? statusOptions.find(o => o.value === value) : statusOptions.find(o => o.value === statusOpen?.value)
 
     return (
         <>
             <Select
                 options={statusOptions}
-                value={value ? statusOptions.find(o => o.value === value) : null}
+                value={defaultValue}
                 onChange={(option) => onChange(option?.value || '')}
                 isSearchable={true}
                 placeholder='Select Status'
