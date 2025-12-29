@@ -30,23 +30,34 @@ export default function OpportunityStatus({ value, onChange }: StatusProps) {
         fetchStatus()
 
     }, [])
-    
+    useEffect(() => {
+    if (!value && status.length > 0) {
+        const openStatus = status.find(
+            s => s.isActive && s.description.toLowerCase() === 'open'
+        );
+
+        if (openStatus) {
+            onChange(openStatus.code);
+        }
+    }
+}, [status]);
+
 
 
     const statusOptions = status
-  .filter(s => s.isActive)
-  .map(stat => ({
-    value: stat.code,
-    label: stat.description
-  }));
-    const statusOpen = statusOptions.find(s => s.label.toLowerCase() === 'open')
-    const defaultValue = value ? statusOptions.find(o => o.value === value) : statusOptions.find(o => o.value === statusOpen?.value)
-
+        .filter(s => s.isActive)
+        .map(stat => ({
+            value: stat.code,
+            label: stat.description
+        }));
+    // const statusOpen = statusOptions.find(s => s.label.toLowerCase() === 'open')
+    // const defaultValue = value ? statusOptions.find(o => o.value === value) : statusOptions.find(o => o.value === statusOpen?.value)
+    const selectedOption = statusOptions.find(o => o.value === value);
     return (
         <>
             <Select
                 options={statusOptions}
-                value={defaultValue}
+                value={selectedOption}
                 onChange={(option) => onChange(option?.value || '')}
                 isSearchable={true}
                 placeholder='Select Status'
