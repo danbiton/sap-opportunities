@@ -60,6 +60,7 @@ jobs:
           az containerapp update \
             --name sap-opportunities-frontend \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --container-name sap-opportunities-frontend \
             --image ${{ secrets.ACR_NAME }}.azurecr.io/sap-opportunities-frontend:latest \
             --revision-suffix "$REVISION_SUFFIX"
             
